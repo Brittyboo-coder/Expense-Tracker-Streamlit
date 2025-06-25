@@ -5,12 +5,14 @@ from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 
+if 'expenses' not in st.session_state:
+    st.session_state.expenses = pd.DataFrame(columns=["Amount", "Category", "Sub-Category", "Date", "Type"])
 # Ensure CSV file exists
 def initialize_csv():
-    if not os.path.exists("expenses.csv"):
-        with open("expenses.csv", "w", newline="") as file:
-            writer = csv.writer(file)
-            writer.writerow(["Amount", "Category", "Sub-Category", "Date", "Type"])
+    if 'expenses' not in not st.session_state:
+        st.session_state.expenses = pd.DataFrame(columns=["Amount", "Category", "Sub-Category", "Date", "Type"])
+        writer = csv.writer(file)
+        writer.writerow(["Amount", "Category", "Sub-Category", "Date", "Type"])
 
 def save_expense(amount, category, sub_category, date, type_):
     with open("expenses.csv", "a", newline="") as file:
@@ -51,7 +53,14 @@ if menu == "Add Record":
     if st.button("Add Record"):
         if amount > 0:
             date = datetime.now().strftime("%Y-%m-%d")
-            save_expense(amount, category, sub_category, date, type_)
+            new_row = pd.DataFrame([{
+                "Amount": amount,
+                "Category": category,
+                "Sub-Category": sub_category,
+                "Date": date,
+                "Type": type_
+            }])
+            st.session_state.expenses = pd.concat([st.session_state.expenses, new_row], ignore_index=True)
             st.success(f"{type_} of ${amount:.2f} added successfully!")
         else:
             st.error("Please enter a valid amount.")
@@ -59,7 +68,7 @@ if menu == "Add Record":
 elif menu == "View Summary":
     st.header("📊 Monthly Summary")
 
-    df = load_expenses()
+    df = st.session_state.expenses
 
     if df.empty:
         st.warning("No records found.")
@@ -86,7 +95,7 @@ elif menu == "View Summary":
 elif menu == "View Graph":
     st.header("📈 Expense Breakdown")
 
-    df = load_expenses()
+    df = st.session_state.expenses
 
     if df.empty or 'Amount' not in df:
         st.warning("No expense data to plot.")
