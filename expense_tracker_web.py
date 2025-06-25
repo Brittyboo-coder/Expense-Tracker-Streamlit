@@ -8,7 +8,7 @@ if 'expenses' not in st.session_state:
     st.session_state.expenses = pd.DataFrame(columns=["Amount", "Category", "Sub-Category", "Date", "Type"])
     
 # Ensure CSV file exists
-    if 'expenses' not in not st.session_state:
+    if 'expenses' not in st.session_state:
         st.session_state.expenses = pd.DataFrame(columns=["Amount", "Category", "Sub-Category", "Date", "Type"])
 
 
