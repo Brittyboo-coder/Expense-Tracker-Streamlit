@@ -7,24 +7,11 @@ import matplotlib.pyplot as plt
 
 if 'expenses' not in st.session_state:
     st.session_state.expenses = pd.DataFrame(columns=["Amount", "Category", "Sub-Category", "Date", "Type"])
+    
 # Ensure CSV file exists
-def initialize_csv():
     if 'expenses' not in not st.session_state:
         st.session_state.expenses = pd.DataFrame(columns=["Amount", "Category", "Sub-Category", "Date", "Type"])
-        writer = csv.writer(file)
-        writer.writerow(["Amount", "Category", "Sub-Category", "Date", "Type"])
 
-def save_expense(amount, category, sub_category, date, type_):
-    with open("expenses.csv", "a", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow([amount, category, sub_category, date, type_])
-
-def load_expenses():
-    if not os.path.exists("expenses.csv"):
-        return pd.DataFrame(columns=["Amount", "Category", "Sub-Category", "Date", "Type"])
-    return pd.read_csv("expenses.csv")
-
-initialize_csv()
 
 # Streamlit App UI
 st.title("💸 Expense & Income Tracker")
